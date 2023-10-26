@@ -1,0 +1,13 @@
+.image-slide {
+	transition: transform 0.5s ease-in-out;
+	transform: translateX(100%);
+  }
+  
+  .image-slide.current {
+	transform: translateX(0);
+  }
+  
+  .image-slide.prev {
+	transform: translateX(-100%);
+  }
+  
