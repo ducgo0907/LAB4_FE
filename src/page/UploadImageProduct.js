@@ -4,21 +4,51 @@ import { Button, Form } from 'react-bootstrap';
 const host = process.env.REACT_APP_BASE_URL;
 
 const UploadImageProduct = ({ onUploadImage, productId }) => {
-	const [files, setFiles] = useState([]);
+	const [previewImages, setPriviewImages] = useState([]);
+	const [imagesState, setImagesState] = useState([]);
 
-	const handleFileChange = (e) => {
-		setFiles(e.target.files);
+	const handleFileChange = async (e) => {
+		const imagesData = [];
+		const previewImagesArray = [];
+		const files = e.target.files;
+
+		for (let i = 0; i < files.length; i++) {
+			const file = files[i];
+			const imageData = await readFileHandler(file);
+			if (imageData !== undefined) {
+				imagesData.push(imageData);
+			}
+
+			if (file.type.startsWith('image/')) {
+				previewImagesArray.push(URL.createObjectURL(file));
+			}
+		}
+
+		// Ensure that you set the previewImages state to a new array with the current previews
+		setPriviewImages((prev) => [...prev, ...previewImagesArray]);
+
+		// Update the images state to accumulate all selected images
+		setImagesState((prevImages) => [...prevImages, ...imagesData]);
+	};
+
+	const readFileHandler = (file) => {
+		const reader = new FileReader();
+		reader.readAsDataURL(file);
+		reader.onloadend = () => {
+			setImagesState((curr) => [...curr, reader.result]);
+			return reader.result;
+		};
 	};
 
 	const handleUpload = async () => {
-		if (files.length === 0) {
+		if (imagesState.length === 0) {
 			alert('Please select at least one image to upload.');
 			return;
 		}
 
 		const formData = new FormData();
-		for (let i = 0; i < files.length; i++) {
-			formData.append('productImages', files[i]);
+		for (let i = 0; i < imagesState.length; i++) {
+			formData.append('file', imagesState[i]);
 		}
 		formData.append('productId', productId);
 		try {
@@ -31,7 +61,8 @@ const UploadImageProduct = ({ onUploadImage, productId }) => {
 			if (response.status === 200) {
 				const data = response.data;
 				onUploadImage(data.images)
-				setFiles([]);
+				setImagesState([]);
+				setPriviewImages([])
 			} else {
 				alert('Failed to upload images.');
 			}
@@ -52,6 +83,15 @@ const UploadImageProduct = ({ onUploadImage, productId }) => {
 						multiple="multiple"
 					/>
 				</Form.Group>
+				{previewImages.map((preview, index) => (
+					<img
+						key={index}
+						src={preview}
+						alt={`Preview ${index}`}
+						style={{ width: '100px', height: '100px', margin: '5px' }}
+					/>
+				))}
+				<br />
 				<Button variant="primary" onClick={handleUpload}>
 					Add Images
 				</Button>

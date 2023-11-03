@@ -10,7 +10,7 @@ class CartService {
 	}
 
 	getAll() {
-		return axios.get(API_URL);
+		return axios.get(API_URL, { headers: authHeader() });
 	}
 
 	addProduct({ productId, cartId, quantity }) {

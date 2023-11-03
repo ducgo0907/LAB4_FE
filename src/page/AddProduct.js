@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import UploadImage from './UploadImage';
+import axios from 'axios';
 
 const host = process.env.REACT_APP_BASE_URL;
 const AddProduct = () => {
@@ -25,16 +26,14 @@ const AddProduct = () => {
 		formData.thumbnail = url;
 		// Make an API call to add the product here
 		try {
-			const response = await fetch(`${host}/products`, {
-				method: 'POST',
+			const response = await axios.post(`${host}/products`, formData, {
 				headers: {
 					'Content-Type': 'application/json',
 				},
-				body: JSON.stringify(formData),
 			});
 
 			if (response.status === 201) {
-				alert('Product added successfully!');
+				console.log(response);
 				// Reset the form
 				setFormData({
 					name: '',
@@ -45,6 +44,7 @@ const AddProduct = () => {
 					brand: '',
 					thumbnail: ''
 				});
+				return response.data.data._id;
 			} else {
 				alert('Failed to add the product.');
 			}
@@ -53,8 +53,12 @@ const AddProduct = () => {
 		}
 	};
 
-	const onUploadImage = (data) => {
-		handleSubmit(data[0].url.toString());
+	const onUploadImage = async (data) => {
+		return await handleSubmit(data[0].toString());
+	}
+
+	const onUploadImageProduct = (formData) => {
+
 	}
 
 	const validateForm = () => {
@@ -133,7 +137,7 @@ const AddProduct = () => {
 					/>
 				</div>
 				<div className='form-group'>
-					<UploadImage onUploadImage={onUploadImage} validateForm={validateForm} />
+					<UploadImage onUploadImage={onUploadImage} validateForm={validateForm} onUploadImageProduct={onUploadImageProduct} />
 				</div>
 			</form>
 		</div>

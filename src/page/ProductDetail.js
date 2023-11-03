@@ -36,10 +36,9 @@ const ProductDetail = () => {
 	}
 
 	const onUploadImage = (data) => {
-		alert(data);
+		alert('Insert Image success');
 		productService.detail(id)
 			.then(res => {
-				console.log(res.data.product);
 				setProduct(res.data.product);
 			})
 			.catch(err => {

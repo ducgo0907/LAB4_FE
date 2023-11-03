@@ -6,6 +6,7 @@ import LoginForm from './page/Login';
 import ShoppingCart from './page/Cart';
 import ProductDetail from './page/ProductDetail';
 import ListComment from './page/ListComment';
+import RegistrationForm from './page/Register';
 
 const routes = [
 	{
@@ -31,6 +32,10 @@ const routes = [
 	{
 		path: ':id/comments',
 		element: <ListComment />
+	},
+	{
+		path: 'register',
+		element: <RegistrationForm />
 	}
 ];
 

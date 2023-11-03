@@ -1,9 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import cartService from '../service/cart.service';
+import authService from '../service/auth.service';
 
 const ShoppingCart = () => {
 	const [carts, setCarts] = useState([]);
 	const [changeQuantity, setChangeQuantity] = useState(false);
+	const [user, setUser] = useState(authService.getCurrentUser());
 
 	useEffect(() => {
 		cartService.getAll()

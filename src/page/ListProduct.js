@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import CartSelectionModal from './ListCart';
 import { Link } from 'react-router-dom';
+import { Badge } from 'react-bootstrap';
 
 const ListProduct = ({ product, onAddToCart, userCarts }) => {
 	const [quantity, setQuantity] = useState(1);
@@ -29,7 +30,7 @@ const ListProduct = ({ product, onAddToCart, userCarts }) => {
 	};
 
 	return (
-		<div className="card mb-3">
+		<div className={`card mb-3`}>
 			<img
 				src={product.thumbnail || 'placeholder-image.jpg'} // Provide a placeholder image source
 				className="card-img-top"
@@ -39,6 +40,7 @@ const ListProduct = ({ product, onAddToCart, userCarts }) => {
 			<div className="card-body">
 				<h5 className="card-title">
 					<Link to={`detail/${product._id}`}>{product.name}</Link>
+					<Badge className='new-product'>New</Badge>
 				</h5>
 				<p className="card-text">Description: {product.description}</p>
 				<p className="card-text">Price: ${product.price}</p>
@@ -69,7 +71,7 @@ const ListProduct = ({ product, onAddToCart, userCarts }) => {
 					)}
 				</div>
 			</div>
-		</div>
+		</div >
 	);
 };
 

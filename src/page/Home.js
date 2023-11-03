@@ -4,6 +4,8 @@ import axios from "axios";
 import cartService from "../service/cart.service";
 import authService from "../service/auth.service";
 import { Link } from "react-router-dom";
+import './ListProduct.css'
+
 
 const host = process.env.REACT_APP_BASE_URL;
 
@@ -107,8 +109,8 @@ const Home = () => {
 				</div>
 			)}
 			<div className="row">
-				{products.map((product) => (
-					<div className="col-sm-4" key={product._id}>
+				{products.map((product) => ( 
+					<div className={`col-sm-4 ${product.stock <= 0 ? 'hide' : ''}`} key={product._id}>
 						<ListProduct product={product} userCarts={carts} onAddToCart={onAddToCart} />
 					</div>
 				))}

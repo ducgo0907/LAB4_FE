@@ -2,12 +2,22 @@ import './App.css';
 import 'bootstrap/dist/css/bootstrap.css';
 import { Link, Routes, Route, BrowserRouter as Router } from 'react-router-dom';
 import { routes } from './routes';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import authService from './service/auth.service';
-import cartService from './service/cart.service';
+import { jwtDecode } from 'jwt-decode';
 
 function App() {
 	const [user, setUser] = useState(authService.getCurrentUser());
+
+	useEffect(() => {
+		if (user) {
+			const decodedToken = jwtDecode(user.accessToken);
+			let currentDate = new Date();
+			if (decodedToken.exp * 1000 < currentDate.getTime()) {
+				logOut();
+			}
+		}
+	}, [user])
 	const logOut = () => {
 		authService.logout();
 		setUser(null);
@@ -31,9 +41,22 @@ function App() {
 						<li className="nav-item">
 							{user
 								? <div className='nav-link' onClick={logOut}>Logout</div>
-								: <Link className="nav-link" to="login">Login</Link>
+								: (
+									<div>
+										<Link className="nav-link" to="login">Login</Link>
+									</div>
+								)
 							}
-
+						</li>
+						<li className="nav-item">
+							{user
+								? <div></div>
+								: (
+									<div>
+										<Link className="nav-link" to="register">Register</Link>
+									</div>
+								)
+							}
 						</li>
 					</ul>
 				</nav>
